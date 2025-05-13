@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .screen-banner {
+        background-color: #6c757d;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 5px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    #seat-map {
+        display: flex;
+        flex-direction: column-reverse; /* Odwrócona kolejność rzędów (A na górze) */
+        gap: 15px;
+        margin-top: 20px;
+    }
+    .seat-row {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+    }
+    .seat {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .available {
+        background-color: #28a745;
+        color: white;
+    }
+    .taken {
+        background-color: #6c757d;
+        cursor: not-allowed;
+    }
+    .selected {
+        background-color: #007bff;
+        transform: scale(1.1);
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <img src="{{ movie.image.url }}" class="img-fluid" style="max-height: 300px; object-fit: cover;" alt="{{ movie.title }}">
+
+    </div>
+    <div class="col-md-8">
+        <h1 class="mb-3">{{ movie.title }}</h1>
+        <p class="lead">{{ movie.description }}</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Wybierz godzinę seansu:</label>
+                <select class="form-select" name="showing" id="showing-select">
+                    {% for showing in showings %}
+                    <option value="{{ showing.id }}">
+                        {{ showing.time|date:"H:i" }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <h4>Wybierz miejsca:</h4>
+                <div class="screen-banner">Ekran</div>
+                <div id="seat-map"></div>
+                <input type="hidden" name="seats" id="selected-seats">
+            </div>
+
+            <div class="alert alert-info">
+                <h4>Całkowita cena: <span id="total-price">0</span> zł</h4>
+            </div>
+            
+            <button type="submit" class="btn btn-success btn-lg">Kup bilety</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const seatMap = document.getElementById('seat-map');
+    const showingSelect = document.getElementById('showing-select');
+    const selectedSeatsInput = document.getElementById('selected-seats');
+    let selectedSeats = new Set();
+
+    function generateSeats(takenSeats) {
+        seatMap.innerHTML = '';
+        
+        // Generowanie rzędów od A (na górze) do F (na dole)
+        for (let row = 6; row >= 1; row--) {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'seat-row';
+            
+            for (let seat = 1; seat <= 10; seat++) {
+                const seatId = `${String.fromCharCode(64 + row)}${seat}`;
+                const seatElem = document.createElement('div');
+                seatElem.className = `seat ${takenSeats.includes(seatId) ? 'taken' : 'available'}`;
+                seatElem.textContent = seatId;
+                
+                if (!takenSeats.includes(seatId)) {
+                    seatElem.addEventListener('click', () => toggleSeat(seatId, seatElem));
+                }
+                
+                rowDiv.appendChild(seatElem);
+            }
+            seatMap.appendChild(rowDiv);
+        }
+    }
+
+    function toggleSeat(seatId, seatElem) {
+        seatElem.classList.toggle('selected');
+        if (selectedSeats.has(seatId)) {
+            selectedSeats.delete(seatId);
+        } else {
+            selectedSeats.add(seatId);
+        }
+        selectedSeatsInput.value = Array.from(selectedSeats).join(',');
+        document.getElementById('total-price').textContent = 
+            selectedSeats.size * parseFloat("{{ movie.price|default:0 }}");
+    }
+
+    function updateSeats() {
+        fetch(`/get-taken-seats/${showingSelect.value}/`)
+            .then(res => res.json())
+            .then(data => {
+                generateSeats(data.taken_seats);
+                selectedSeats.clear();
+                selectedSeatsInput.value = '';
+                document.getElementById('total-price').textContent = 0;
+            });
+    }
+
+    showingSelect.addEventListener('change', updateSeats);
+    updateSeats();
+});
+</script>
+{% endblock %}

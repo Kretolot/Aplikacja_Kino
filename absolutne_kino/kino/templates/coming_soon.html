@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Wkrótce w kinie</h1>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for movie in movies %}
+    <div class="col">
+        <div class="card h-100">
+            <img src="{{ movie.image.url }}" class="img-fluid" style="max-height: 300px; object-fit: cover;" alt="{{ movie.title }}">
+
+            <div class="card-body">
+                <h5 class="card-title">{{ movie.title }}</h5>
+                <p class="card-text">{{ movie.description }}</p>
+                <div class="text-muted">Premiera: {{ movie.release_date }}</div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
