@@ -64,7 +64,7 @@
                 <select class="form-select" name="showing" id="showing-select">
                     {% for showing in showings %}
                     <option value="{{ showing.id }}">
-                        {{ showing.time|date:"H:i" }}
+                        {{ showing.date|date:" d.m" }} o godzinie {{ showing.time|date:"H:i" }}
                     </option>
                     {% endfor %}
                 </select>

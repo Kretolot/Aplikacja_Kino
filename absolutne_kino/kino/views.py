@@ -26,7 +26,7 @@ def home(request):
 
 def movie_detail(request, movie_id):
     movie = get_object_or_404(Movie, pk=movie_id)
-    showings = Showing.objects.filter(movie=movie)[:3]
+    showings = Showing.objects.filter(movie=movie).order_by('date', 'time')
     
     if request.method == 'POST':
         showing_id = request.POST.get('showing')
