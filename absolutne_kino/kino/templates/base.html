@@ -4,26 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absolutne Kino</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        body {
+            background-color: #000000;
+            color: white;
+        }
+
+        /* Navbar z szarym tłem */
+        nav.navbar.navbar-dark {
+            background-color: #292929 !important; /* Szary kolor navbaru */
+            box-shadow: 0 2px 10px rgba(255, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-brand,
+        .nav-link {
+            color: whitesmoke !important;
+        }
+
+        .nav-link:hover {
+            color: #ff4444 !important;
+            text-shadow: 0 0 8px rgba(255, 68, 68, 0.6);
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='whitesmoke' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        /* Czarny przycisk zamiast niebieskiego */
+        .btn-primary {
+            background-color: #000 !important; /* Czarny kolor przycisku */
+            border: none !important;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff4444 !important;
+            color: white !important;
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* Globalne style kart */
         .movie-card {
-            transition: transform 0.3s;
+            background-color: #000 !important;
+            color: white !important;
+            border: none !important;
+            transition: box-shadow 0.3s ease, transform 0.3s;
         }
+
         .movie-card:hover {
-            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            transform: scale(1.02);
         }
-        .seat { width: 40px; height: 40px; margin: 2px; }
-        .available { background-color: #4CAF50; }
-        .taken { background-color: #6c757d; }
-        .selected { background-color: #0d6efd; }
+
+        /* Dla nadchodzących filmów (opcjonalnie) */
+        .coming-soon-card {
+            background-color: #000 !important;
+            color: white !important;
+        }
+
+        .coming-soon-card .text-muted {
+            color: #ccc !important;
+        }
     </style>
 </head>
-<body class="bg-light">
-    <!-- Nawigacja -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">Absolutne Kino</a>
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <img src="{{ MEDIA_URL }}logo.png" alt="Logo" class="me-2" style="height: 40px;">
+                Absolutne Kino
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -37,7 +89,7 @@
                     </li>
                     {% if user.is_staff %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin">Panel Admina</a>
+                        <a class="nav-link" href="{% url 'admin:index' %}">Panel Admina</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -49,10 +101,7 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Bootstrap JS + Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom JS dla wyboru miejsc -->
     {% block scripts %}{% endblock %}
 </body>
 </html>

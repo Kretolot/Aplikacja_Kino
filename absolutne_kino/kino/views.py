@@ -47,7 +47,7 @@ def movie_detail(request, movie_id):
         showing.save()
         
         # Generowanie unikalnego URL do PDF
-        ticket_url = request.build_absolute_uri(f'/movie/{movie.id}/ticket/')
+        ticket_url = request.build_absolute_uri(f'/movie/{movie.id}/')
         
         # Generowanie kodu QR
         qr = qrcode.QRCode(
@@ -99,5 +99,5 @@ def movie_detail(request, movie_id):
     })
 
 def ticket_redirect(request, movie_id):
-    ticket_path = os.path.join(settings.MEDIA_URL, 'tickets', f'ticket_{movie_id}.pdf')
-    return redirect(ticket_path)
+    ticket_url = request.build_absolute_uri(f'/media/tickets/ticket_{movie_id}.pdf')
+    return redirect(ticket_url)
