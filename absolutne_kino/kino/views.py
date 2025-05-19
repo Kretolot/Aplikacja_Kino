@@ -93,7 +93,16 @@ def movie_detail(request, movie_id):
         template = get_template('pdf_template.html')
         html = template.render(context)
 
-        # Wysyłka PDF jako odpowiedź do przeglądarki
+        # Ścieżka zapisu PDF na serwerze
+        pdf_dir = os.path.join(settings.MEDIA_ROOT, 'tickets')
+        os.makedirs(pdf_dir, exist_ok=True)  # Tworzy folder, jeśli nie istnieje
+        pdf_path = os.path.join(pdf_dir, f'ticket_{movie.id}.pdf')
+
+        # Zapis PDF do pliku
+        with open(pdf_path, 'wb') as f:
+            pisa.CreatePDF(html, dest=f)
+
+        # Wysyłka PDF jako odpowiedź do przeglądarki (generujemy jeszcze raz do response)
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = f'filename=bilet_{movie.id}.pdf'
         pisa.CreatePDF(html, dest=response)
@@ -104,6 +113,7 @@ def movie_detail(request, movie_id):
         'movie': movie,
         'showings': showings
     })
+
 
 # Przekierowanie użytkownika do wcześniej wygenerowanego PDF z biletem
 def ticket_redirect(request, movie_id):
