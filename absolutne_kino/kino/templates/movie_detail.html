@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <style>
+    /* Pasek symbolizujący ekran */
     .screen-banner {
         background-color: #6c757d;
         color: white;
@@ -13,17 +13,23 @@
         font-weight: bold;
         text-transform: uppercase;
     }
+
+    /* Kontener mapy siedzeń — odwrócony kierunek kolumn (rząd A na górze) */
     #seat-map {
         display: flex;
-        flex-direction: column-reverse; /* Odwrócona kolejność rzędów (A na górze) */
+        flex-direction: column-reverse;
         gap: 15px;
         margin-top: 20px;
     }
+
+    /* Jeden rząd siedzeń */
     .seat-row {
         display: flex;
         justify-content: center;
         gap: 8px;
     }
+
+    /* Styl pojedynczego miejsca */
     .seat {
         width: 40px;
         height: 40px;
@@ -34,14 +40,20 @@
         cursor: pointer;
         transition: all 0.3s ease;
     }
+
+    /* Miejsce dostępne */
     .available {
         background-color: #28a745;
         color: white;
     }
+
+    /* Miejsce zajęte */
     .taken {
         background-color: #6c757d;
         cursor: not-allowed;
     }
+
+    /* Miejsce aktualnie wybrane przez użytkownika */
     .selected {
         background-color: #007bff;
         transform: scale(1.1);
@@ -49,38 +61,47 @@
 </style>
 
 <div class="row">
+    <!-- Lewa kolumna z plakatem -->
     <div class="col-md-4 mb-4">
         <img src="{{ movie.image.url }}" class="img-fluid" style="max-height: 300px; object-fit: cover;" alt="{{ movie.title }}">
-
     </div>
+
+    <!-- Prawa kolumna z opisem i formularzem -->
     <div class="col-md-8">
         <h1 class="mb-3">{{ movie.title }}</h1>
         <p class="lead">{{ movie.description }}</p>
-        
+
+        <!-- Formularz wyboru seansu i miejsc -->
         <form method="post">
             {% csrf_token %}
+
+            <!-- Lista rozwijana z seansami -->
             <div class="mb-3">
                 <label class="form-label">Wybierz godzinę seansu:</label>
                 <select class="form-select" name="showing" id="showing-select">
                     {% for showing in showings %}
-                    <option value="{{ showing.id }}">
-                        {{ showing.date|date:" d.m" }} o godzinie {{ showing.time|date:"H:i" }}
-                    </option>
+                        <option value="{{ showing.id }}">
+                            {{ showing.date|date:" d.m" }} o {{ showing.time|date:"H:i" }}
+                        </option>
                     {% endfor %}
                 </select>
             </div>
 
+            <!-- Mapa miejsc -->
             <div class="mb-3">
                 <h4>Wybierz miejsca:</h4>
                 <div class="screen-banner">Ekran</div>
                 <div id="seat-map"></div>
+                <!-- Ukryte pole do wysłania wybranych miejsc -->
                 <input type="hidden" name="seats" id="selected-seats">
             </div>
 
+            <!-- Wyświetlenie ceny -->
             <div class="alert alert-info">
                 <h4>Całkowita cena: <span id="total-price">0</span> zł</h4>
             </div>
-            
+
+            <!-- Przycisk kupna -->
             <button type="submit" class="btn btn-success btn-lg">Kup bilety</button>
         </form>
     </div>
@@ -93,44 +114,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const seatMap = document.getElementById('seat-map');
     const showingSelect = document.getElementById('showing-select');
     const selectedSeatsInput = document.getElementById('selected-seats');
-    let selectedSeats = new Set();
+    const totalPriceDisplay = document.getElementById('total-price');
+    let selectedSeats = new Set(); // Zbiór wybranych miejsc
 
+    // Funkcja generuje mapę siedzeń, uwzględniając miejsca zajęte
     function generateSeats(takenSeats) {
-        seatMap.innerHTML = '';
-        
-        // Generowanie rzędów od A (na górze) do F (na dole)
+        seatMap.innerHTML = ''; // Czyścimy poprzednią mapę
+
         for (let row = 6; row >= 1; row--) {
             const rowDiv = document.createElement('div');
             rowDiv.className = 'seat-row';
-            
+
             for (let seat = 1; seat <= 10; seat++) {
-                const seatId = `${String.fromCharCode(64 + row)}${seat}`;
+                const seatId = `${String.fromCharCode(64 + row)}${seat}`; // np. A1, B3
                 const seatElem = document.createElement('div');
-                seatElem.className = `seat ${takenSeats.includes(seatId) ? 'taken' : 'available'}`;
+                seatElem.className = 'seat ' + (takenSeats.includes(seatId) ? 'taken' : 'available');
                 seatElem.textContent = seatId;
-                
+
                 if (!takenSeats.includes(seatId)) {
                     seatElem.addEventListener('click', () => toggleSeat(seatId, seatElem));
                 }
-                
+
                 rowDiv.appendChild(seatElem);
             }
+
             seatMap.appendChild(rowDiv);
         }
     }
 
+    // Funkcja obsługuje zaznaczanie/odznaczanie miejsca
     function toggleSeat(seatId, seatElem) {
         seatElem.classList.toggle('selected');
+
         if (selectedSeats.has(seatId)) {
             selectedSeats.delete(seatId);
         } else {
             selectedSeats.add(seatId);
         }
+
+        // Aktualizacja pola ukrytego i ceny
         selectedSeatsInput.value = Array.from(selectedSeats).join(',');
-        document.getElementById('total-price').textContent = 
-            selectedSeats.size * parseFloat("{{ movie.price|default:0 }}");
+        totalPriceDisplay.textContent = selectedSeats.size * parseFloat("{{ movie.price|default:0 }}");
     }
 
+    // Funkcja ładuje zajęte miejsca dla danego seansu z backendu
     function updateSeats() {
         fetch(`/get-taken-seats/${showingSelect.value}/`)
             .then(res => res.json())
@@ -138,12 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 generateSeats(data.taken_seats);
                 selectedSeats.clear();
                 selectedSeatsInput.value = '';
-                document.getElementById('total-price').textContent = 0;
+                totalPriceDisplay.textContent = 0;
             });
     }
 
+    // Zmiana seansu powoduje odświeżenie mapy miejsc
     showingSelect.addEventListener('change', updateSeats);
-    updateSeats();
+    updateSeats(); // Inicjalizacja przy załadowaniu strony
 });
 </script>
 {% endblock %}

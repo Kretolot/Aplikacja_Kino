@@ -1,38 +1,39 @@
 """
-URL configuration for absolutne_kino project.
+Konfiguracja adresów URL dla projektu absolutne_kino.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+Więcej informacji:
+https://docs.djangoproject.com/en/5.2/topics/http/urls/
 """
+
 from django.contrib import admin
 from django.urls import path, include   
-from kino import views
+from kino import views  # Import widoków z aplikacji "kino"
 
+# Używane w szablonach przy korzystaniu z przestrzeni nazw
 app_name = 'kino'
 
+# Lista obsługiwanych ścieżek URL
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
+    path('admin/', admin.site.urls),  # Panel administracyjny Django
+
+    path('', views.home, name='home'),  # Strona główna (lista filmów)
+
+    # Ścieżka do przekierowania po zakupie biletu (np. do PDF lub biletu)
     path('movie/<int:movie_id>/ticket/', views.ticket_redirect, name='ticket_redirect'),
+
+    # Szczegóły filmu i wybór miejsc
     path('movie/<int:movie_id>/', views.movie_detail, name='movie_detail'),
+
+    # Strona "Wkrótce w kinie"
     path('coming-soon/', views.coming_soon, name='coming_soon'),
+
+    # API zwracające zajęte miejsca dla danego seansu (np. używane w JS)
     path('get-taken-seats/<int:showing_id>/', views.get_taken_seats, name='get_taken_seats'),
 ]
 
-
+# Obsługa plików multimedialnych w trybie deweloperskim (np. zdjęcia filmów)
 from django.conf import settings
 from django.conf.urls.static import static
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

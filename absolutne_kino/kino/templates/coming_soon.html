@@ -2,33 +2,41 @@
 
 {% block content %}
 <style>
-    /* Zmiana tła klocków na ciemny szary (#292929) */
+    /* Styl karty filmu "wkrótce" z ciemnym tłem i białym tekstem */
     .coming-soon-card {
-        background-color: #292929 !important;
-        color: white !important;
+        background-color: #292929 !important; /* ciemny szary kolor tła */
+        color: white !important;              /* biały tekst */
         border: none;
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        transition: box-shadow 0.3s ease, transform 0.3s ease; /* animacje przy hover */
     }
 
+    /* Efekt hover: czerwony cień i powiększenie */
     .coming-soon-card:hover {
         box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
         transform: scale(1.02);
     }
 
+    /* Kolor tekstu pomocniczego (np. data premiery) na jasnoszary */
     .coming-soon-card .text-muted {
         color: #ccc !important;
     }
 </style>
 
 <h1 class="mb-4">Wkrótce w kinie</h1>
+
 <div class="row row-cols-1 row-cols-md-2 g-4">
     {% for movie in movies %}
     <div class="col">
+        <!-- Pojedyncza karta filmu -->
         <div class="card h-100 coming-soon-card">
+            <!-- Obraz filmu z ustawioną wysokością i dopasowaniem -->
             <img src="{{ movie.image.url }}" class="card-img-top" alt="{{ movie.title }}" style="height: 300px; object-fit: cover;">
             <div class="card-body">
+                <!-- Tytuł filmu -->
                 <h5 class="card-title">{{ movie.title }}</h5>
+                <!-- Opis filmu -->
                 <p class="card-text">{{ movie.description }}</p>
+                <!-- Data premiery z szarym tekstem -->
                 <div class="text-muted">Premiera: {{ movie.release_date }}</div>
             </div>
         </div>

@@ -2,40 +2,51 @@
 
 {% block content %}
 <style>
+    /* Styl karty filmu */
     .movie-card {
-        background-color: #292929 !important;
-        color: white !important;
-        border: none;
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        background-color: #292929 !important; /* Ciemne tło karty */
+        color: white !important;             /* Biały tekst */
+        border: none;                        /* Bez obramowania */
+        transition: box-shadow 0.3s ease, transform 0.3s ease; /* Animacje przy najechaniu */
     }
 
+    /* Efekt po najechaniu na kartę */
     .movie-card:hover {
-        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-        transform: scale(1.02);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); /* Czerwony cień */
+        transform: scale(1.02);                   /* Lekko powiększ */
     }
 
+    /* Styl przycisku w karcie */
     .movie-card .btn-dark {
-        background-color: #000000 !important;  /* Czarny kolor guzika */
-        color: white !important;
-        border: none !important;
+        background-color: #000000 !important; /* Czarny przycisk */
+        color: white !important;              /* Biały tekst */
+        border: none !important;              /* Bez obramowania */
     }
 
+    /* Styl przycisku po najechaniu */
     .movie-card .btn-dark:hover {
-        background-color: #ff4444 !important;
+        background-color: #ff4444 !important;  /* Czerwone tło po najechaniu */
         color: white !important;
-        box-shadow: 0 0 10px rgba(255, 68, 68, 0.6);
-        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(255, 68, 68, 0.6); /* Cień wokół przycisku */
+        transform: scale(1.05);                     /* Powiększenie przycisku */
     }
 </style>
 
+<!-- Siatka kart filmów: 1 kolumna na małych ekranach, 3 na średnich i większych -->
 <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for movie in movies %}
     <div class="col">
+        <!-- Pojedyncza karta filmu -->
         <div class="card movie-card h-100">
+            <!-- Obraz filmu -->
             <img src="{{ movie.image.url }}" class="img-fluid" style="max-height: 300px; object-fit: cover;" alt="{{ movie.title }}">
+            
+            <!-- Treść karty -->
             <div class="card-body">
                 <h5 class="card-title">{{ movie.title }}</h5>
                 <p class="card-text">Cena biletu: {{ movie.price }} zł</p>
+                
+                <!-- Przycisk prowadzący do szczegółów filmu i wyboru miejsc -->
                 <a href="{% url 'movie_detail' movie.id %}" class="btn btn-dark">Wybierz miejsca</a>
             </div>
         </div>
