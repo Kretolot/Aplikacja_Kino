@@ -20,10 +20,9 @@ def coming_soon(request):
     upcoming_movies = Movie.objects.filter(movie_type='soon')
     return render(request, 'coming_soon.html', {'movies': upcoming_movies})
 
-# Widok: Strona główna z aktualnie dostępnymi filmami (pierwsze 3)
+# Widok: Strona główna z aktualnie dostępnymi filmami
 def home(request):
     movies = Movie.objects.filter(movie_type='current')[:3]
-    # Usunięto linię wypisującą ścieżkę do obrazu filmu
     return render(request, 'home.html', {'movies': movies})
 
 # Widok: Szczegóły filmu i obsługa rezerwacji miejsc
@@ -66,7 +65,7 @@ def movie_detail(request, movie_id):
         qr.make(fit=True)
         qr_img = qr.make_image(fill_color="black", back_color="white")
 
-        # Konwersja obrazu QR do formatu base64 (dla osadzenia w HTML)
+        # Konwersja obrazu QR do formatu base64
         buffer = BytesIO()
         qr_img.save(buffer, format="PNG")
         qr_img_base64 = base64.b64encode(buffer.getvalue()).decode()

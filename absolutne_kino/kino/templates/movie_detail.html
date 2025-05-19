@@ -14,7 +14,7 @@
         text-transform: uppercase;
     }
 
-    /* Kontener mapy siedzeń — odwrócony kierunek kolumn (rząd A na górze) */
+    /* Kontener mapy siedzeń */
     #seat-map {
         display: flex;
         flex-direction: column-reverse;
@@ -101,7 +101,7 @@
                 <h4>Całkowita cena: <span id="total-price">0</span> zł</h4>
             </div>
 
-            <!-- Przycisk kupna -->
+            <!-- Przycisk do kupowania -->
             <button type="submit" class="btn btn-success btn-lg">Kup bilety</button>
         </form>
     </div>
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Funkcja generuje mapę siedzeń, uwzględniając miejsca zajęte
     function generateSeats(takenSeats) {
-        seatMap.innerHTML = ''; // Czyścimy poprzednią mapę
+        seatMap.innerHTML = ''; // Czyszczenie mapy przed dodaniem nowych miejsc
 
         for (let row = 6; row >= 1; row--) {
             const rowDiv = document.createElement('div');

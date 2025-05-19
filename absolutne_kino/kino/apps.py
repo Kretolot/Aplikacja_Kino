@@ -4,5 +4,5 @@ from django.apps import AppConfig
 class KinoConfig(AppConfig):
     # Domyślne pole automatycznego klucza głównego dla modeli w tej aplikacji
     default_auto_field = 'django.db.models.BigAutoField'
-    # Nazwa aplikacji (musi odpowiadać nazwie folderu aplikacji)
+    # Nazwa aplikacji
     name = 'kino'
