@@ -1,3 +1,12 @@
+"""
+Zadanie zaliczeniowe z języka Python  
+Imię i nazwisko ucznia: Tomasz Gradowski
+Data wykonania zadania: 19.05.2025
+Treść zadania: Sprzedaż biletów w kinie  
+Opis funkcjonalności aplikacji: Zawiera logikę widoków odpowiedzialnych za stronę główną, szczegóły filmu, rezerwację miejsc, generowanie PDF z biletem oraz pobieranie zajętych miejsc.
+"""
+
+
 import qrcode
 from io import BytesIO
 import base64

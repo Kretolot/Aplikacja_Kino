@@ -1,3 +1,12 @@
+"""
+Zadanie zaliczeniowe z języka Python  
+Imię i nazwisko ucznia: Tomasz Gradowski
+Data wykonania zadania: 19.05.2025
+Treść zadania: Sprzedaż biletów w kinie  
+Opis funkcjonalności aplikacji: Zawiera modele danych dla filmów i seansów, w tym obsługę plakatów filmowych oraz zajętych miejsc na seansach.
+"""
+
+
 from django.db import models
 from PIL import Image
 

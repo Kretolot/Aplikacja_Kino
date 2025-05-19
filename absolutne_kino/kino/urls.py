@@ -1,3 +1,12 @@
+"""
+Zadanie zaliczeniowe z języka Python  
+Imię i nazwisko ucznia: Tomasz Gradowski
+Data wykonania zadania: 19.05.2025 
+Treść zadania: Sprzedaż biletów w kinie  
+Opis funkcjonalności aplikacji: Definiuje ścieżki URL dla widoków aplikacji 'kino', takich jak strona główna, szczegóły filmu, pobieranie zajętych miejsc oraz przekierowanie do biletu.
+"""
+
+
 from django.urls import include
 from django.urls import path
 from django.conf import settings

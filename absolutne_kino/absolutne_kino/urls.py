@@ -1,9 +1,11 @@
 """
-Konfiguracja adresów URL dla projektu absolutne_kino.
-
-Więcej informacji:
-https://docs.djangoproject.com/en/5.2/topics/http/urls/
+Zadanie zaliczeniowe z języka Python  
+Imię i nazwisko ucznia: Tomasz Gradowski
+Data wykonania zadania: 19.05.2025
+Treść zadania: Sprzedaż biletów w kinie  
+Opis funkcjonalności aplikacji: Konfiguruje główne ścieżki URL projektu Django, w tym panel administratora i przekierowanie do aplikacji 'kino'.
 """
+
 
 from django.contrib import admin
 from django.urls import path, include   

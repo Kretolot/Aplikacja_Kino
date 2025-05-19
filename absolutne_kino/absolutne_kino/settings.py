@@ -1,3 +1,11 @@
+"""
+Zadanie zaliczeniowe z języka Python  
+Imię i nazwisko ucznia: Tomasz Gradowski
+Data wykonania zadania: 19.05.2025
+Treść zadania: Sprzedaż biletów w kinie  
+Opis funkcjonalności aplikacji: Konfiguracja ustawień Django, w tym bazy danych, mediów, aplikacji oraz ustawień bezpieczeństwa i lokalizacji.
+"""
+
 import os
 from pathlib import Path
 

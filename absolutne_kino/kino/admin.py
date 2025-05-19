@@ -1,3 +1,12 @@
+"""
+Zadanie zaliczeniowe z języka Python  
+Imię i nazwisko ucznia: Tomasz Gradowski
+Data wykonania zadania: 19.05.2025 
+Treść zadania: Sprzedaż biletów w kinie  
+Opis funkcjonalności aplikacji: Definiuje wygląd modeli Film i Seans w panelu administratora Django.
+"""
+
+
 from django.contrib import admin
 from .models import Movie, Showing
 
